@@ -5,11 +5,11 @@ dotenv.config();
 
 export default (auth: any) => {
   const id = Math.ceil(Math.random() * 100);
-  const name = `hoge${id}`
-  
+  const name = `hoge${id}`;
+
   const script = google.script({
     version: 'v1',
-    auth
+    auth,
   });
   script.scripts.run({
     auth,
@@ -17,11 +17,11 @@ export default (auth: any) => {
     requestBody: {
       function: 'test',
       parameters: [id, name],
-      devMode: true
-    }
+      devMode: true,
+    },
   }).then((res) => {
     console.log(res);
-  }).catch(e => {
+  }).catch((e) => {
     console.error(e);
   });
 };
