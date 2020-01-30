@@ -3,17 +3,17 @@ import * as readline from 'readline';
 import { google } from 'googleapis';
 import { TOKEN_PATH, SCOPES } from './variables';
 
-interface Credentials {
-  installed: {
-    client_id: string,
-    project_id: string,
-    auth_uri: string,
-    token_uri: string,
-    auth_provider_x509_cert_url: string,
-    client_secret: string,
-    redirect_uris: string[],
-  }
-}
+// interface Credentials {
+//   installed: {
+//     client_id: string,
+//     project_id: string,
+//     auth_uri: string,
+//     token_uri: string,
+//     auth_provider_x509_cert_url: string,
+//     client_secret: string,
+//     redirect_uris: string[],
+//   }
+// }
 
 const getAccessToken = (oAuth2Cleient: any, callback: Function) => {
   const authUrl = oAuth2Cleient.generateAuthUrl({
@@ -43,7 +43,11 @@ const getAccessToken = (oAuth2Cleient: any, callback: Function) => {
   });
 };
 
-export default (credentials: Credentials, callback: Function) => {
+const storeToken = (token: any) => {
+  fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
+};
+
+export default (credentials: any, callback: Function) => {
   const { client_id, client_secret, redirect_uris } = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
 
@@ -52,6 +56,18 @@ export default (credentials: Credentials, callback: Function) => {
       return getAccessToken(oAuth2Client, callback);
     }
     oAuth2Client.setCredentials(JSON.parse(token.toString()));
+    oAuth2Client.refreshAccessToken((e, newToken) => {
+      if (e) {
+        console.error(e);
+        return;
+      } if (newToken == null) {
+        console.error('No new token.');
+        return;
+      }
+      console.log(newToken, token);
+      oAuth2Client.setCredentials(newToken);
+      storeToken(newToken);
+    });
     return callback(oAuth2Client);
   });
 };
