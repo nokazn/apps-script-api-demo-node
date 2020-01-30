@@ -48,6 +48,11 @@ SCRIPT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ダウンロードした`credential.json`をプロジェクトルートに配置する。
 
+```bash
+# 実行
+$ node ./dist/index.js
+```
+
 ## 参考
 
 [Node.js Quickstart  |  Apps Script API  |  Google Developers](https://developers.google.com/apps-script/api/quickstart/nodejs)
