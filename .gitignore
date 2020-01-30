@@ -1,0 +1,9 @@
+*
+!*/
+**/node_modules
+!src/*
+!.eslintrc.js
+!.gitignore
+!package*
+!README.md
+!tsconfig.json

@@ -15,5 +15,17 @@
   "bugs": {
     "url": "https://github.com/nokazn/apps-script-api-demo/issues"
   },
-  "homepage": "https://github.com/nokazn/apps-script-api-demo#readme"
+  "homepage": "https://github.com/nokazn/apps-script-api-demo#readme",
+  "dependencies": {
+    "googleapis": "^47.0.0",
+    "typescript": "^3.7.5"
+  },
+  "devDependencies": {
+    "@types/node": "^13.5.2",
+    "@typescript-eslint/eslint-plugin": "^2.18.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0"
+  }
 }
