@@ -1,0 +1,19 @@
+{
+  "name": "apps-script-api-demo",
+  "version": "1.0.0",
+  "description": "A demo to execute Apps Script API from Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nokazn/apps-script-api-demo.git"
+  },
+  "author": "nokazn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nokazn/apps-script-api-demo/issues"
+  },
+  "homepage": "https://github.com/nokazn/apps-script-api-demo#readme"
+}
