@@ -1,22 +1,13 @@
 import * as fs from 'fs';
 import * as readline from 'readline';
-import { google } from 'googleapis';
+// eslint-disable-next-line no-unused-vars
+import { google, oauth2_v2 } from 'googleapis';
 import { TOKEN_PATH, SCOPES } from './variables';
 
-// interface Credentials {
-//   installed: {
-//     client_id: string,
-//     project_id: string,
-//     auth_uri: string,
-//     token_uri: string,
-//     auth_provider_x509_cert_url: string,
-//     client_secret: string,
-//     redirect_uris: string[],
-//   }
-// }
+type oAuth2Credentials = oauth2_v2.Params$$Tokeninfo | { access_token?: string | null };
 
-const getAccessToken = (oAuth2Cleient: any, callback: Function) => {
-  const authUrl = oAuth2Cleient.generateAuthUrl({
+const getAccessToken = (oAuth2Client: any, callback: Function) => {
+  const authUrl = oAuth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES,
   });
@@ -27,24 +18,23 @@ const getAccessToken = (oAuth2Cleient: any, callback: Function) => {
   });
   rl.question('Enter the code from that page here: ', (code) => {
     rl.close();
-    oAuth2Cleient.getToken(code, (e: NodeJS.ErrnoException, token: any) => {
+    // コードとトークンを交換
+    oAuth2Client.getToken(code, (e: NodeJS.ErrnoException, token: oAuth2Credentials) => {
       if (e) {
         console.error('Error retrieving access token', e);
         return;
       }
+      oAuth2Client.setCredentials(token);
+      // トークンを保存
       fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
         if (err) {
           console.error(err);
           return;
         }
-        callback(oAuth2Cleient);
+        callback(oAuth2Client);
       });
     });
   });
-};
-
-const storeToken = (token: any) => {
-  fs.writeFileSync(TOKEN_PATH, JSON.stringify(token));
 };
 
 export default (credentials: any, callback: Function) => {
@@ -56,6 +46,7 @@ export default (credentials: any, callback: Function) => {
       return getAccessToken(oAuth2Client, callback);
     }
     oAuth2Client.setCredentials(JSON.parse(token.toString()));
+    // トークンを更新
     oAuth2Client.refreshAccessToken((e, newToken) => {
       if (e) {
         console.error(e);
@@ -66,7 +57,8 @@ export default (credentials: any, callback: Function) => {
       }
       console.log(newToken, token);
       oAuth2Client.setCredentials(newToken);
-      storeToken(newToken);
+      // 更新したトークンを保存
+      fs.writeFileSync(TOKEN_PATH, JSON.stringify(newToken));
     });
     return callback(oAuth2Client);
   });

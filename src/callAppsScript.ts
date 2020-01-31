@@ -3,16 +3,16 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export default (auth: any) => {
+export default (oAuth2Client: any) => {
   const id = Math.ceil(Math.random() * 100);
   const name = `hoge${id}`;
 
   const script = google.script({
     version: 'v1',
-    auth,
+    auth: oAuth2Client,
   });
-  script.scripts.run({
-    auth,
+  return script.scripts.run({
+    auth: oAuth2Client,
     scriptId: process.env.SCRIPT_ID,
     requestBody: {
       function: 'test',
